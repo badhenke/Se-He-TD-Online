@@ -278,7 +278,7 @@ namespace LobbyLogin
                 {
                     changeProgressbarText("Downloading data... " + 0 + "% done");
                 });
-                asdasdasd
+               
                 //Console.WriteLine("Recieved profileimage size from: " + message + " number of parts " + size);
                 CommonMethods.send(tcpClient, "imready:"+username);
             }
