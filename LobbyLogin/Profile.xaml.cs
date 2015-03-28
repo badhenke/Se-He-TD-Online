@@ -14,6 +14,7 @@ using System.IO;
 using System.Windows.Media.Imaging;
 using System.Text;
 using System.Windows.Threading;
+using System.IO.IsolatedStorage;
 
 namespace LobbyLogin
 {
@@ -29,6 +30,7 @@ namespace LobbyLogin
         private string[] profileImageArray;
         private int nrOfparts;
         DispatcherTimer timer = new DispatcherTimer();
+        private System.IO.IsolatedStorage.IsolatedStorageFile localstore = System.IO.IsolatedStorage.IsolatedStorageFile.GetUserStoreForApplication();
 
         public Profile()
         {
@@ -229,13 +231,34 @@ namespace LobbyLogin
                 });
 
                 waiting4profile = false;
-                sendingImage = true;
 
-                Deployment.Current.Dispatcher.BeginInvoke(() =>
+                //Kontrollera ifall bild finns lokalt
+                if (!localstore.FileExists(username+"img"))
                 {
-                    timer.Start();
-                });
-               
+                    sendingImage = true;
+
+                    Deployment.Current.Dispatcher.BeginInvoke(() =>
+                    {
+                        timer.Start();
+                    });
+                }
+                else
+                {
+
+                    Deployment.Current.Dispatcher.BeginInvoke(() =>
+                    {
+                        StreamReader reader = new StreamReader(new IsolatedStorageFileStream(username + "img", FileMode.Open, localstore));
+                        string image = reader.ReadLine();
+                        reader.Close();
+                        byte[] buffer = string2byte(image);
+                        Stream s = new MemoryStream(buffer);
+                        BitmapImage bmp2 = new BitmapImage();
+                        bmp2.SetSource(s);
+                        profileimage.Source = bmp2;
+                    
+                    });
+
+                }
 
             }
 
@@ -277,8 +300,6 @@ namespace LobbyLogin
             else if (prefix == "SendProfile")
             {
 
-
-
                 string part = message.Substring(0, message.IndexOf(":"));
                 string data = message.Substring(message.IndexOf(":") + 1);
                 int ipart = Convert.ToInt32(part);
@@ -312,7 +333,13 @@ namespace LobbyLogin
                     
                 });
                 sendingImage = false;
+
+                //Spara hemladdad bild lokalt med username
+                StreamWriter sw = new StreamWriter(new IsolatedStorageFileStream(username + "img", FileMode.Create, localstore));
+                sw.WriteLine(image);
+                sw.Close();
             }
+
 
 
             if (!sendingImage)
