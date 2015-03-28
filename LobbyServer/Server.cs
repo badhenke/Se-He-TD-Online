@@ -291,7 +291,7 @@ namespace LobbyServer
                             part++;
                             profileImSendInfo[message][1] = Convert.ToString(part);
                             profileImSendInfo[message][3] = Convert.ToString(i);
-                            return;
+                            return; 
                         }
                     }
 
