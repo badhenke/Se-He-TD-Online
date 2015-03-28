@@ -266,7 +266,7 @@ namespace LobbyLogin
             }
             else if (prefix == "SendProfileSize")
             {
-                
+                adsf
                 Deployment.Current.Dispatcher.BeginInvoke(() =>
                 {
                     timer.Stop();
