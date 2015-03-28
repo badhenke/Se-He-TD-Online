@@ -219,9 +219,6 @@ namespace LobbyLogin
                 }
 
 
-
-
-
                 //Uppdatera email och rating
                 Deployment.Current.Dispatcher.BeginInvoke(() =>
                 {
@@ -229,11 +226,6 @@ namespace LobbyLogin
                     ratingTextBlock.Text = info[2];
                     //Uppdatera active games
                     gamesListbox.ItemsSource = GameListBoxItemsList;
-
-
-
-                        
-
                 });
 
                 waiting4profile = false;
@@ -371,10 +363,6 @@ namespace LobbyLogin
                     temp[index] = byteValue;
                     index++;
                 }
-
-
-
-                    
              
             }
             return temp;
