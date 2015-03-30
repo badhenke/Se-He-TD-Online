@@ -210,7 +210,7 @@ namespace SocketServer
         private string getOpponentsName(string username, string matchId)
         {
             string[] lines = System.IO.File.ReadAllLines(accountsDir.FullName + "\\" + username + ".txt");
-            string temp = lines[3].Substring(0, lines[3].IndexOf("-" + matchId));
+            string temp = lines[4].Substring(0, lines[4].IndexOf("-" + matchId));
 
             string opponent=null;
 
@@ -228,7 +228,7 @@ namespace SocketServer
         private bool ifMyTurn (string username, string matchId)
         {
             string[] lines = System.IO.File.ReadAllLines(accountsDir.FullName + "\\" + username + ".txt");
-            string first = lines[3].Substring(lines[3].IndexOf("-" + matchId));
+            string first = lines[4].Substring(lines[4].IndexOf("-" + matchId));
             string turnStatus = null;
 
             if (first.Contains(":"))
@@ -253,9 +253,9 @@ namespace SocketServer
         {
             string[] lines = System.IO.File.ReadAllLines(accountsDir.FullName + "\\" + username + ".txt");
             string search = "-" + matchId;
-            string first = lines[3].Substring(0, lines[3].IndexOf(search));
-            char[] second = lines[3].Substring(lines[3].IndexOf(search) , search.Length +2 ).ToCharArray();
-            string third = lines[3].Substring(lines[3].IndexOf(search) + search.Length +2 );
+            string first = lines[4].Substring(0, lines[4].IndexOf(search));
+            char[] second = lines[4].Substring(lines[4].IndexOf(search) , search.Length +2 ).ToCharArray();
+            string third = lines[4].Substring(lines[4].IndexOf(search) + search.Length +2 );
 
             if (second[second.Length-1] == '1')
             {
@@ -388,35 +388,35 @@ namespace SocketServer
             lines1[2] = rating1.ToString();
             lines2[2] = rating2.ToString();
             string f1, f2temp, f2;
-            if (lines1[3].IndexOf(":") > 0)
+            if (lines1[4].IndexOf(":") > 0)
             {
-                f1 = lines1[3].Substring(0, lines1[3].IndexOf(opponentName));
-                f2temp = lines1[3].Substring(lines1[3].IndexOf(opponentName));
+                f1 = lines1[4].Substring(0, lines1[4].IndexOf(opponentName));
+                f2temp = lines1[4].Substring(lines1[4].IndexOf(opponentName));
 
                 if (f2temp.IndexOf(":") > 0)
                     f2 = f2temp.Substring(f2temp.IndexOf(":"));
                 else
                     f2 = "";
 
-                lines1[3] = f1.Substring(0, f1.Length - 1) + f2;
+                lines1[4] = f1.Substring(0, f1.Length - 1) + f2;
             }
             else
-                lines1[3] = "";
+                lines1[4] = "";
 
-            if (lines2[3].IndexOf(":") > 0)
+            if (lines2[4].IndexOf(":") > 0)
             {
-                f1 = lines2[3].Substring(0, lines2[3].IndexOf(username));
-                f2temp = lines2[3].Substring(lines2[3].IndexOf(username));
+                f1 = lines2[4].Substring(0, lines2[4].IndexOf(username));
+                f2temp = lines2[4].Substring(lines2[4].IndexOf(username));
 
                 if (f2temp.IndexOf(":") > 0)
                     f2 = f2temp.Substring(f2temp.IndexOf(":"));
                 else
                     f2 = "";
 
-                lines2[3] = f1.Substring(0, f1.Length - 1) + f2;
+                lines2[4] = f1.Substring(0, f1.Length - 1) + f2;
             }
             else
-                lines2[3] = "";
+                lines2[4] = "";
             
 
             File.WriteAllLines(accountsDir.FullName + "\\" + username + ".txt", lines1);

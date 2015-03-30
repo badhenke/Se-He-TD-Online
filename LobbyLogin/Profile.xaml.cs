@@ -26,7 +26,7 @@ namespace LobbyLogin
         private Thread listeningThread;
         private string username;
         private ProgressIndicator progressbar;
-        private bool sendStatus, sendingImage, waiting4profile;
+        private bool sendStatus, sendingImage, waiting4profile, recieve;
         private string[] profileImageArray;
         private int nrOfparts;
         DispatcherTimer timer = new DispatcherTimer();
@@ -55,7 +55,7 @@ namespace LobbyLogin
             };
             SystemTray.SetProgressIndicator(this, progressbar);
 
-
+            
             //Skapar en anonym tråd för att ansluta, så inte UI tråden stoppas.
             //När den har lyckats ansluta mot servern så kommer tcpClient referera till den 
             new Thread(delegate()
@@ -82,29 +82,34 @@ namespace LobbyLogin
                 listeningThread = new Thread(new ThreadStart(listenerThread));
                 listeningThread.Start();
 
-                
 
+
+                
             }).Start();
 
-            waiting4profile = true;
-            
-            timer.Tick += timer_Tick;
-            timer.Interval = new TimeSpan(00, 0, 0);
-            timer.Start();
 
+            waiting4profile = true;
+
+            timer.Tick += timer_Tick;
+            timer.Interval = new TimeSpan(00, 0, 1);
+            timer.Start();
             
         }
 
         void timer_Tick(object sender, object e)
         {
-            timer.Interval = new TimeSpan(00, 0, 2);
-            if (waiting4profile)
+            
+            if (recieve)
             {
-                updateUserInfo();
-            }
-            if(sendingImage)
-            {
-                CommonMethods.send(tcpClient, "StartSendImage:" + username);
+                if (waiting4profile)
+                {
+                    updateUserInfo();
+                }
+                if (sendingImage)
+                {
+                    CommonMethods.send(tcpClient, "StartSendImage:" + username);
+                }
+                //timer.Interval = new TimeSpan(00, 0, 5);
             }
             
         }
@@ -125,7 +130,7 @@ namespace LobbyLogin
                 try
                 {
 
-
+                    recieve = true;
                     //Blockera tråd tills ett nytt meddelande har mottagits
                     //System.Diagnostics.Debug.WriteLine("Lyssnar efter meddelande");
                     bytesRead = stream.Read(message, 0, 4096);
@@ -339,6 +344,10 @@ namespace LobbyLogin
                 sw.WriteLine(image);
                 sw.Close();
             }
+            else if(prefix == "Retry")
+            {
+                CommonMethods.send(tcpClient, App.lastCommandSend);
+            }
 
 
 
@@ -351,7 +360,7 @@ namespace LobbyLogin
         }
         private void PhoneApplicationPage_Unloaded_1(object sender, RoutedEventArgs e)
         {
-            listeningThread.Abort();
+            
         }
 
         private void updateUserInfo()
@@ -509,6 +518,11 @@ namespace LobbyLogin
 
         protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
         {
+
+            //CommonMethods.send(tcpClient, "Kill:" + username);
+
+            //listeningThread.Abort();
+
             Application.Current.Terminate();
         }
 

@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Timers;
 
 
 namespace LobbyServer
@@ -83,22 +84,34 @@ namespace LobbyServer
             }
         }
 
+        private static void onTimeoutEvent(Object source, ElapsedEventArgs e, ref  TcpClient tcpClient)
+        {
+            tcpClient.Close();
+            
+        }
+
         //Ger varje klientanslutning en egen lyssnartråd
         private void handleClientComm(object client)
         {
             Console.WriteLine("Ny tråd startad");
 
             TcpClient tcpClient = (TcpClient)client;
+            string state = "waiting";
             NetworkStream clientStream = tcpClient.GetStream();
             int localThreadName = threadName;
             threadName++;
             byte[] message = new byte[bufferSize];
             int bytesRead;
+            bool startThread = true;
+            System.Timers.Timer timeoutTimer = new System.Timers.Timer(20000);
+            timeoutTimer.Elapsed += (sender, e) => onTimeoutEvent(sender, e, ref tcpClient);
+            timeoutTimer.Enabled = true;
+            timeoutTimer.Start();
 
             //Verifiering för att Lyssnaren ska börja
             bytesRead = clientStream.Read(message, 0, bufferSize);
 
-            bool startThread = true;
+            
             //Om ej rätt nyckel
             if (encoder.GetString(message, 0, bytesRead) != "4s5c289d89d56d3f63dg8h3b85t")
             {
@@ -126,7 +139,7 @@ namespace LobbyServer
                 }
                 //Meddelande har mottagits
                 string encodedMessage = encoder.GetString(message, 0, bytesRead);
-                handleMessage(tcpClient, encodedMessage, localThreadName);
+                handleMessage(tcpClient, encodedMessage, localThreadName, ref state, ref timeoutTimer);
             }
             
             //En anslutning till klient har dött
@@ -137,19 +150,33 @@ namespace LobbyServer
             
             threadDict.Remove(localThreadName);
 
+            if(state.IndexOf("sendingImage")>=0)
+            {
+                string[] temp = state.Split(':');
+                System.IO.File.Delete(accountsDir.FullName + "\\" + temp[1] + ".txt");
+            }
+
             Console.WriteLine("Avsluta tråd");
             Console.WriteLine("Klienter aktiva: " + threadDict.Count);
 
         }
 
         //Hantera olika meddelanden
-        private void handleMessage(TcpClient tcpClient, string encodedMessage, int localThreadName)
+        private void handleMessage(TcpClient tcpClient, string encodedMessage, int localThreadName, ref string state, ref System.Timers.Timer timeoutTimer)
         {
+            timeoutTimer.Stop();
+            timeoutTimer.Start();
+
             string prefix = encodedMessage.Substring(0, encodedMessage.IndexOf(":"));
             string message = encodedMessage.Substring(encodedMessage.IndexOf(":")+1);
             
-            //Console.WriteLine(encodedMessage);
-            
+            //Console.WriteLine("\n State: " + state);
+            if(message.IndexOf(prefix)>0)
+            {
+                send(tcpClient, "Retry:");
+                Console.WriteLine("\n werid data. asking for a new send.    " + prefix );
+                return;
+            }
 
             //Om en klient vill logga in
             if (prefix == "Login")
@@ -202,6 +229,8 @@ namespace LobbyServer
                 //string email = emailAndImage.Substring(0, emailAndImage.IndexOf(":"));
                 //string image = emailAndImage.Substring(emailAndImage.IndexOf(":") + 1);
 
+
+                state = "sendingImage:" + username;
                 createAccountFile(username, password, email);
 
                 send(tcpClient, "Create:Success");
@@ -253,6 +282,7 @@ namespace LobbyServer
                 if (!profileImSendInfo.ContainsKey(message))
                 {
                     Console.WriteLine("profile image send to " + message);
+                    
                     string[] lines = System.IO.File.ReadAllLines(accountsDir.FullName + "\\" + message + ".txt");
                     string[] info = new string[4];
                     info[0] = lines[3];
@@ -262,8 +292,17 @@ namespace LobbyServer
                     info[3] = "" + 0; ;
                     profileImSendInfo.Add(message, info);
 
-                    send(tcpClient, "SendProfileSize:" + info[2]);
-                    //sendImage(message);
+                    
+                    try
+                    {
+                        send(tcpClient, "SendProfileSize:" + info[2]);
+                    }
+                    catch
+                    {
+                        threadDict.Remove(localThreadName);
+                        System.IO.File.Delete(accountsDir.FullName + "\\" + message + ".txt");
+                        Console.WriteLine("Error on transfer. deleting user: " + message);
+                    }
                 }
                 else 
                 {
@@ -323,7 +362,16 @@ namespace LobbyServer
                 String[] s = new String[size];
                 profileImageList.Add(msplit[0], s);
                 Console.WriteLine("Recieved profileimage size from: " + message + " number of parts " + size);
-                send(tcpClient, "imready:");
+                try
+                {
+                    send(tcpClient, "imready:");
+                }
+                catch
+                {
+                    threadDict.Remove(localThreadName);
+                    System.IO.File.Delete(accountsDir.FullName + "\\" + message + ".txt");
+                    Console.WriteLine("Error on transfer. deleting user: " + message);
+                }
             }
             else if(prefix == "SendProfile")
             {
@@ -334,7 +382,16 @@ namespace LobbyServer
 
                 profileImageList[user][Convert.ToInt32(part)] = data;
                 Console.WriteLine("ADD DATA TO " + user + "   part: " + part + "      size: " + data.Length);
-                send(tcpClient, "imready:");
+                try
+                {
+                    send(tcpClient, "imready:");
+                }
+                catch
+                {
+                    threadDict.Remove(localThreadName);
+                    System.IO.File.Delete(accountsDir.FullName + "\\" + user + ".txt");
+                    Console.WriteLine("Error on transfer. deleting user: " + user);
+                }
             }
             else if (prefix == "DoneProfile")
             {
@@ -348,6 +405,7 @@ namespace LobbyServer
                 saveImage(message, image);
                 profileImageList.Remove(message);
                 Console.WriteLine("Full ProfileImage recieved for " + message);
+                state = "waiting";
             }
             else if (prefix == "Kill")
             {
@@ -507,40 +565,48 @@ namespace LobbyServer
         //Returnerar en User baserat på username
         private User getUser(TcpClient tcpClientLocal, string userName)
         {
-            string[] lines = System.IO.File.ReadAllLines(accountsDir.FullName + "\\" + userName + ".txt");
-            string[] matches = new string[10];
-            if (lines.Length == 5)
+            try
             {
-                string message = lines[4];
-                for (int i = 0; i < 10; i++)
+                string[] lines = System.IO.File.ReadAllLines(accountsDir.FullName + "\\" + userName + ".txt");
+                string[] matches = new string[10];
+                if (lines.Length == 5)
                 {
-                    if (message.IndexOf(":") >= 0)
+                    string message = lines[4];
+                    for (int i = 0; i < 10; i++)
                     {
-                        matches[i] = message.Substring(0, message.IndexOf(":"));
-                        message = message.Substring(message.IndexOf(":") + 1);
-                    }
-                    else
-                    {
-                        if (!message.Equals(""))
+                        if (message.IndexOf(":") >= 0)
                         {
-                            matches[i] = message;
-                            message = "";
-
+                            matches[i] = message.Substring(0, message.IndexOf(":"));
+                            message = message.Substring(message.IndexOf(":") + 1);
                         }
                         else
                         {
-                            matches[i] = "";
+                            if (!message.Equals(""))
+                            {
+                                matches[i] = message;
+                                message = "";
 
+                            }
+                            else
+                            {
+                                matches[i] = "";
+
+                            }
                         }
                     }
                 }
+                else
+                {
+                    matches[0] = "";
+                }
+                return new User() { username = userName, password = lines[0], email = lines[1], rating = int.Parse(lines[2]), image = lines[3], matches = matches, tcpClient = tcpClientLocal };
+
             }
-            else
+            catch
             {
-                matches[0] = "";
+
             }
-            
-            return new User() { username = userName, password = lines[0], email = lines[1], rating = int.Parse(lines[2]), image=lines[3], matches=matches, tcpClient = tcpClientLocal };
+            return null;
 
         }
 
@@ -573,13 +639,21 @@ namespace LobbyServer
         //Skickar till klient
         private void send(TcpClient client, string s)
         {
-            NetworkStream clientStream = client.GetStream();
+            try
+            {
+                NetworkStream clientStream = client.GetStream();
 
-            byte[] buffer = encoder.GetBytes(s);
+                byte[] buffer = encoder.GetBytes(s);
 
-            clientStream.Write(buffer, 0, buffer.Length);
-            clientStream.Flush();
-
+                clientStream.Write(buffer, 0, buffer.Length);
+                clientStream.Flush();
+            }
+            catch(Exception e)
+            {
+                client.Close();
+                if (s.IndexOf("imready") == 0 || s.IndexOf("SendProfileSize")==0)
+                    throw new Exception();
+            }
         }
 
         //Loada server settings

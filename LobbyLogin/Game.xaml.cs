@@ -790,8 +790,15 @@ namespace LobbyLogin
             
             if (gameState.Equals("game"))
             {
-                saveAllToStorage();
-                e.Cancel = false;
+                
+
+                    saveAllToStorage();
+                    //var s = "/Profile.xaml?username=" + username;
+                    //NavigationService.Navigate(new Uri("/Profile.xaml?username=" + username, UriKind.Relative));
+                    //listeningThread.Abort();
+                    e.Cancel = false;
+             
+                
             }
             else if (gameState.Equals("towerpopup"))
             {

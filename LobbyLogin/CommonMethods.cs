@@ -15,6 +15,7 @@ namespace LobbyLogin
         //Skicka meddelande
         public static void send(TcpClient tcpClient, string message)
         {
+            App.lastCommandSend = message;
             var stream = tcpClient.GetStream();
             byte[] buffer = encoding.GetBytes(message);
 

@@ -18,6 +18,7 @@ namespace LobbyLogin
         public static string gameServerIP { get; set; }
         public static string lobbyServerIP = "95.80.58.228";
         public static int lobbyServerPort = 64444;
+        public static string lastCommandSend = "";
 
         /// <summary>
         /// Provides easy access to the root frame of the Phone Application.

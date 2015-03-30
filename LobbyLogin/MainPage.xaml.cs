@@ -473,6 +473,7 @@ namespace LobbyLogin
         //Om man trycker på den fysiska bakåtknappen så ska appen avslutas
         protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
         {
+            CommonMethods.send(tcpClient, "Kill:" + username);
             Application.Current.Terminate();
             e.Cancel = true;
         }
