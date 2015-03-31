@@ -33,10 +33,7 @@
 
 
         <!--Panorama control-->
-        <phone:Panorama Name="panorama" Title="account">
-            <phone:Panorama.Background>
-                <ImageBrush />
-            </phone:Panorama.Background>
+        <phone:Panorama Name="panorama" Title="account" Background="BurlyWood">
 
             
             <phone:PanoramaItem Name="profilePanoramaItem" Header="username">

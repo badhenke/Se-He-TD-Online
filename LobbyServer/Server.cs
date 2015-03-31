@@ -103,7 +103,7 @@ namespace LobbyServer
             byte[] message = new byte[bufferSize];
             int bytesRead;
             bool startThread = true;
-            System.Timers.Timer timeoutTimer = new System.Timers.Timer(20000);
+            System.Timers.Timer timeoutTimer = new System.Timers.Timer(30000);
             timeoutTimer.Elapsed += (sender, e) => onTimeoutEvent(sender, e, ref tcpClient);
             timeoutTimer.Enabled = true;
             timeoutTimer.Start();
@@ -369,7 +369,8 @@ namespace LobbyServer
                 catch
                 {
                     threadDict.Remove(localThreadName);
-                    System.IO.File.Delete(accountsDir.FullName + "\\" + message + ".txt");
+                    if (userExist(message))
+                        System.IO.File.Delete(accountsDir.FullName + "\\" + message + ".txt");
                     Console.WriteLine("Error on transfer. deleting user: " + message);
                 }
             }

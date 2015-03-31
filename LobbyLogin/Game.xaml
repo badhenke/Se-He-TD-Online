@@ -12,267 +12,32 @@
     SupportedOrientations="Landscape"  Orientation="Landscape"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True" Loaded="PhoneApplicationPage_Loaded_1" Unloaded="PhoneApplicationPage_Unloaded_1">
-    
-    
-    
+
+
+
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent" >
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="123*"/>
-            <ColumnDefinition Width="59*"/>
-        </Grid.ColumnDefinitions>
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="437*"/>
+            <RowDefinition Height="43*"/>
+
         </Grid.RowDefinitions>
-    
+
         <!--Upper Panel-->
-        <Canvas Height="70" Margin="0,5,0,5" Grid.ColumnSpan="2" >
+        <Canvas Margin="0,5,0,0" Background="Black" Grid.Row="1">
             <TextBlock Name="moneyTextBlock" Text="Money: " Style="{StaticResource PhoneTextNormalStyle}"  />
             <TextBlock Name="IncomeTextBlock" Text="Income: " Style="{StaticResource PhoneTextNormalStyle}"  Canvas.Left="150"/>
-            <TextBlock Name="LifeTextBlock" Text="Life: " Style="{StaticResource PhoneTextNormalStyle}" Canvas.Top="35" />
-            <Button Name="monsterButton" Content="Send" Height="70" Width="130"  Click="monsterButtonClick" Canvas.Left="535"/>
-            <Button Name="sendButton" Width="80" Height="70" HorizontalAlignment="Right"  VerticalAlignment="Bottom" Click="doneButtonClick" BorderThickness="2" Canvas.Left="650">
+            <TextBlock Name="LifeTextBlock" Text="Life: " Style="{StaticResource PhoneTextNormalStyle}"  Canvas.Left="350"/>
+            <Button Name="sendButton" Width="77" Height="60" HorizontalAlignment="Right"  VerticalAlignment="Bottom" Click="doneButtonClick" BorderThickness="1" Canvas.Left="650" Canvas.Top="-12">
                 <Button.Background>
                     <ImageBrush ImageSource="icons\transport.play.png"/>
                 </Button.Background>
             </Button>
         </Canvas>
 
-        <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0" Grid.ColumnSpan="2">
-            <Grid.Background>
-                <ImageBrush ImageSource="Assets\Background.png"/>
-            </Grid.Background>
-            <Grid Name="towerGrid">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="45"/>
-                    <RowDefinition Height="45"/>
-                    <RowDefinition Height="45"/>
-                    <RowDefinition Height="45"/>
-                    <RowDefinition Height="45"/>
-                    <RowDefinition Height="45"/>
-                    <RowDefinition Height="45"/>
-                    <RowDefinition Height="45"/>
-                    <RowDefinition Height="45"/>
-                    <RowDefinition Height="45"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="45"/>
-                    <ColumnDefinition Width="45"/>
-                    <ColumnDefinition Width="45"/>
-                    <ColumnDefinition Width="45"/>
-                    <ColumnDefinition Width="45"/>
-                    <ColumnDefinition Width="45"/>
-                    <ColumnDefinition Width="45"/>
-                    <ColumnDefinition Width="45"/>
-                    <ColumnDefinition Width="45"/>
-                    <ColumnDefinition Width="45"/>
-                    <ColumnDefinition Width="45"/>
-                    <ColumnDefinition Width="45"/>
-                    <ColumnDefinition Width="45"/>
-                    <ColumnDefinition Width="45"/>
-                    <ColumnDefinition Width="45"/>
-                    <ColumnDefinition Width="45"/>
-                </Grid.ColumnDefinitions>
+        <Canvas Name="monsterCanvas" Width="720" Height="430" Background="MintCream"/>
 
-                <Rectangle Tag="empty" Tap="Rectangle_Tap" Grid.Column="0" Grid.Row="0" Height="45" Width="45"  Stroke="Blue" StrokeThickness="0" >
-                <Rectangle.Fill>
-                    <ImageBrush ImageSource="towers\towerNotBuilt.png"/>
-                </Rectangle.Fill>
-                </Rectangle>
-                <Rectangle Tag="empty" Tap="Rectangle_Tap" Grid.Column="1" Grid.Row="0" Height="45" Width="45"  Stroke="Blue" StrokeThickness="0" >
-                    <Rectangle.Fill>
-                        <ImageBrush ImageSource="towers\towerNotBuilt.png"/>
-                    </Rectangle.Fill>
-                </Rectangle>
-                <Rectangle Tag="empty" Tap="Rectangle_Tap" Grid.Column="2" Grid.Row="0" Height="45" Width="45"  Stroke="Blue" StrokeThickness="0" >
-                    <Rectangle.Fill>
-                        <ImageBrush ImageSource="towers\towerNotBuilt.png"/>
-                    </Rectangle.Fill>
-                </Rectangle>
-                <Rectangle Tag="empty" Tap="Rectangle_Tap" Grid.Column="3" Grid.Row="0" Height="45" Width="45"  Stroke="Blue" StrokeThickness="0" >
-                    <Rectangle.Fill>
-                        <ImageBrush ImageSource="towers\towerNotBuilt.png"/>
-                    </Rectangle.Fill>
-                </Rectangle>
-                <Rectangle Tag="empty" Tap="Rectangle_Tap" Grid.Column="4" Grid.Row="0" Height="45" Width="45"  Stroke="Blue" StrokeThickness="0" >
-                    <Rectangle.Fill>
-                        <ImageBrush ImageSource="towers\towerNotBuilt.png"/>
-                    </Rectangle.Fill>
-                </Rectangle>
-                <Rectangle Tag="empty" Tap="Rectangle_Tap" Grid.Column="5" Grid.Row="0" Height="45" Width="45"  Stroke="Blue" StrokeThickness="0" >
-                    <Rectangle.Fill>
-                        <ImageBrush ImageSource="towers\towerNotBuilt.png"/>
-                    </Rectangle.Fill>
-                </Rectangle>
-                <Rectangle Tag="empty" Tap="Rectangle_Tap" Grid.Column="6" Grid.Row="0" Height="45" Width="45"  Stroke="Blue" StrokeThickness="0" >
-                    <Rectangle.Fill>
-                        <ImageBrush ImageSource="towers\towerNotBuilt.png"/>
-                    </Rectangle.Fill>
-                </Rectangle>
-                <Rectangle Tag="empty" Tap="Rectangle_Tap" Grid.Column="7" Grid.Row="0" Height="45" Width="45"  Stroke="Blue" StrokeThickness="0" >
-                    <Rectangle.Fill>
-                        <ImageBrush ImageSource="towers\towerNotBuilt.png"/>
-                    </Rectangle.Fill>
-                </Rectangle>
-                <Rectangle Tag="empty" Tap="Rectangle_Tap" Grid.Column="8" Grid.Row="0" Height="45" Width="45"  Stroke="Blue" StrokeThickness="0" >
-                    <Rectangle.Fill>
-                        <ImageBrush ImageSource="towers\towerNotBuilt.png"/>
-                    </Rectangle.Fill>
-                </Rectangle>
-                <Rectangle Tag="empty" Tap="Rectangle_Tap" Grid.Column="9" Grid.Row="0" Height="45" Width="45"  Stroke="Blue" StrokeThickness="0" >
-                    <Rectangle.Fill>
-                        <ImageBrush ImageSource="towers\towerNotBuilt.png"/>
-                    </Rectangle.Fill>
-                </Rectangle>
-                <Rectangle Tag="empty" Tap="Rectangle_Tap" Grid.Column="10" Grid.Row="0" Height="45" Width="45" Stroke="Blue" StrokeThickness="0" >
-                    <Rectangle.Fill>
-                        <ImageBrush ImageSource="towers\towerNotBuilt.png"/>
-                    </Rectangle.Fill>
-                </Rectangle>
-                <Rectangle Tag="empty" Tap="Rectangle_Tap" Grid.Column="11" Grid.Row="0" Height="45" Width="45" Stroke="Blue" StrokeThickness="0" >
-                    <Rectangle.Fill>
-                        <ImageBrush ImageSource="towers\towerNotBuilt.png"/>
-                    </Rectangle.Fill>
-                </Rectangle>
-                <Rectangle Tag="empty" Tap="Rectangle_Tap" Grid.Column="12" Grid.Row="0" Height="45" Width="45" Stroke="Blue" StrokeThickness="0" >
-                    <Rectangle.Fill>
-                        <ImageBrush ImageSource="towers\towerNotBuilt.png"/>
-                    </Rectangle.Fill>
-                </Rectangle>
-                <Rectangle Tag="empty" Tap="Rectangle_Tap" Grid.Column="13" Grid.Row="0" Height="45" Width="45" Stroke="Blue" StrokeThickness="0" >
-                    <Rectangle.Fill>
-                        <ImageBrush ImageSource="towers\towerNotBuilt.png"/>
-                    </Rectangle.Fill>
-                </Rectangle>
-                <Rectangle Tag="empty" Tap="Rectangle_Tap" Grid.Column="14" Grid.Row="0" Height="45" Width="45" Stroke="Blue" StrokeThickness="0" >
-                    <Rectangle.Fill>
-                        <ImageBrush ImageSource="towers\towerNotBuilt.png"/>
-                    </Rectangle.Fill>
-                </Rectangle>
-            </Grid>
-
-        </Grid>
-        <Canvas Name="monsterCanvas" HorizontalAlignment="Left" Margin="13,0,0,0" Grid.Row="1" VerticalAlignment="Top">
-
-        </Canvas>
-        <!-- PopUp build-->
-        <StackPanel Name="popUpTowerAction1" Visibility="Collapsed" Background="BurlyWood" HorizontalAlignment="Left" Height="397" Margin="13,74,0,0" VerticalAlignment="Top" Width="703" Grid.RowSpan="2" Grid.ColumnSpan="2">
-            <TextBlock Foreground="Black" FontSize="30" Text=" Build Options" Margin="0,0,0,0"/>
-            
-            <!--Overall Panel Holder-->
-            <StackPanel Orientation="Horizontal">
-                <ListBox Name="towerListBox" Tap="popUpTowerAction1ItemTap" Height="310" Width="320" Margin="10,0,0,0" Background="Brown">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Height="60" >
-                                <TextBlock Text="{Binding towerName}" FontSize="26" Margin="20,10,0,0" TextAlignment="Left"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            
-                <!--Left Panel-->
-                <StackPanel Width="320" Height="355" Margin="45,0,0,0" Orientation="Vertical">
-
-                    <TextBlock Name="popUpTowerAction1TowerName" Text="Tower name: " TextWrapping="Wrap" Foreground="Black" Margin="0,15,0,0"/>
-                    <TextBlock Name="popUpTowerAction1TowerCost" Text="Cost: " TextWrapping="Wrap" Foreground="Black" Margin="0,0,0,0"/>
-                    <TextBlock Name="popUpTowerAction1TowerDamage" Text="Damage: " TextWrapping="Wrap" Foreground="Black" Margin="0,0,0,0"/>
-                    <TextBlock Name="popUpTowerAction1TowerRange" Text="Range: " TextWrapping="Wrap" Foreground="Black" Margin="0,0,0,0"/>
-                    <TextBlock Name="popUpTowerAction1TowerNumOfShoots" Text="# of shoots: " TextWrapping="Wrap" Foreground="Black" Margin="0,0,0,0"/>
-                    <Button Click="popUpTower1CloseButtonClick" Content="cancel" BorderBrush="Black" BorderThickness="1"  Margin="170,70,0,0" Foreground="Black" Height="72" Width="150"/>
-                    <Button Content="build" Foreground="Black" BorderBrush="Black" BorderThickness="1" Margin="170,-15,0,0" Click="popUpTowerAction1BuildButtonClick" Width="150"/>
-
-                </StackPanel>
-            </StackPanel>                     
-         </StackPanel>
-        
-        <!-- popup Monster build -->
-        <StackPanel Name="popUpMonsterAction" Visibility="Collapsed" Background="BurlyWood"  Height="397" Margin="13,74,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="703" Grid.RowSpan="2" Grid.ColumnSpan="2">
-
-            <TextBlock Foreground="Black" FontSize="30" Text=" Build Monsters" Height="48" Margin="0,0,302,0"/>
-
-            <!--Holder for 3 middle panels-->
-            <Canvas Height="25">
-                <TextBlock Text="All monster" FontSize="18" Width="100" Margin="10,0,0,0"/>
-                <TextBlock Text="Your send list" FontSize="18" Width="100" Canvas.Left="400"/>
-            </Canvas>
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
-                <ListBox x:Name="monsterListBox" Height="250" Width="300" Margin="10,0,10,0"  Background="Brown">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal"  Margin="5,5,0,0">
-
-                            <Rectangle Fill="Black" Height="50" Width="50" Margin="0,0,0,0"/>
-                            <TextBlock Text="{Binding monsterName}" FontSize="29" Margin="10,1,0,0" TextAlignment="Left"/>
-
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-                </ListBox>
-                
-                <!--Middle panel-->
-                <StackPanel Orientation="Vertical" Width="70">
-
-                    <Button Width="80" Height="70" Click="infoMonsterButtonClick" Margin="-5,-10,0,0" BorderThickness="2">
-                        <Button.Background>
-                            <ImageBrush ImageSource="icons\questionmark.png"/>
-                        </Button.Background>
-                    </Button>
-
-                    <Button Click="popUpMonsterAddButtonClick" Width="80" Height="70" Margin="-5,-15,0,0" BorderThickness="2">
-                        <Button.Background>
-                            <ImageBrush ImageSource="icons\next.png"/>
-                        </Button.Background>
-                    </Button>
-
-                    <Button Click="popUpMonsterChangePosClick" Tag="up" Width="80" Height="70" Margin="-5,10,0,0" BorderThickness="2">
-                        <Button.Background>
-                            <ImageBrush ImageSource="icons\up.png"/>
-                        </Button.Background>
-                    </Button>
-
-                    <Button Click="popUpMonsterChangePosClick" Tag="down" Width="80" Height="70" Margin="-5,-15,0,0" BorderThickness="2">
-                        <Button.Background>
-                            <ImageBrush ImageSource="icons\down.png"/>
-                        </Button.Background>
-                    </Button>
-
-                </StackPanel>
-                
-                <ListBox x:Name="monsterSendListBox" Height="250" Width="295" Margin="10,0,0,0"  Background="Brown">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Margin="5,5,0,0">
-
-                                <Rectangle Fill="Black" Height="50" Width="50" Margin="0,0,0,0"/>
-                                <TextBlock Text="{Binding monsterName}" FontSize="29" Margin="10,1,0,0" TextAlignment="Left"/>
-
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-
-            </StackPanel>
-            
-            <StackPanel Orientation="Horizontal" Margin="400,0,0,0">
-
-                <Button Click="popUpMonsterCloseButtonClick" Content="cancel" BorderBrush="Black" BorderThickness="1" Width="150"  Margin="150,0,0,0" Foreground="Black" Height="72"/>
-
-            </StackPanel>
-        </StackPanel>
-
-        <StackPanel Name="popUpMonsterInfo" Tap="popUpMonsterInfoCloseTap" Visibility="Collapsed" Background="BurlyWood" HorizontalAlignment="Left" Height="397" Margin="13,74,0,0" VerticalAlignment="Top" Width="703" Grid.RowSpan="2" Grid.ColumnSpan="2">
-
-            
-            <TextBlock Name="popUpMonsterActionName" Text="Name: " TextWrapping="Wrap" Foreground="Black" Margin="10,0,0,0" FontSize="30"/>
-            <TextBlock Name="popUpMonsterActionCost" Text="Cost: " TextWrapping="Wrap" Foreground="Black" Margin="350,20,0,0"/>
-            <TextBlock Name="popUpMonsterActionHp" Text="Hp: " TextWrapping="Wrap" Foreground="Black" Margin="350,0,0,0"/>
-            <TextBlock Name="popUpMonsterActionArmor" Text="Armor: " TextWrapping="Wrap" Foreground="Black" Margin="350,0,0,0"/>
-            <TextBlock Name="popUpMonsterActionComment" Text="Comment: " TextWrapping="Wrap" Foreground="Black" Margin="350,0,0,0"/>
-            <TextBlock Text="Tap to close" TextWrapping="Wrap" Margin="10,200,0,0" FontSize="17" Foreground="Red"/>
-        </StackPanel>
 
 
 

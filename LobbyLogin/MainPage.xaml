@@ -23,10 +23,8 @@
         </Grid.RowDefinitions>
 
         <!--Panorama control-->
-        <phone:Panorama Name="panorama" Title="lobby">
-            <phone:Panorama.Background>
-                <ImageBrush />
-            </phone:Panorama.Background>
+        <phone:Panorama Name="panorama" Title="lobby" Background="BurlyWood" >
+
 
             <!--Panorama item login-->
             <phone:PanoramaItem Name="loginPanoramaItem" Header="login">
